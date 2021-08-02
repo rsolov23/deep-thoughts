@@ -13,8 +13,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
-
+startApolloServer();
 // integrate our Apollo server with the Express application as middleware
+
 server.applyMiddleware({ app });
 
 app.use(express.urlencoded({ extended: false }));
@@ -27,3 +28,6 @@ db.once("open", () => {
     console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
   });
 });
+async function startApolloServer() {
+  await server.start();
+}
