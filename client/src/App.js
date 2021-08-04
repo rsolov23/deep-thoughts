@@ -1,51 +1,28 @@
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-} from "@apollo/client";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Login from "./pages/Login";
-import NoMatch from "./pages/NoMatch";
-import SingleThought from "./pages/SingleThought";
-import Profile from "./pages/Profile";
-import Signup from "./pages/Signup";
-import Home from "./pages/Home";
+import { Link } from "react-router-dom";
 
-const httpLink = createHttpLink({
-  uri: "/graphql",
-});
-
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
-
-function App() {
+const ReactionList = ({ reactions }) => {
   return (
-    <ApolloProvider client={client}>
-      <Router>
-        <div className="flex-column justify-flex-start min-100-vh">
-          <Header />
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/signup" component={Signup} />
-              <Route exact path="/profile/:username?" component={Profile} />
-              <Route exact path="/thought/:id" component={SingleThought} />
-
-              <Route component={NoMatch} />
-            </Switch>
-          </div>
-          <Footer />
-        </div>
-      </Router>
-    </ApolloProvider>
+    <div className="card mb-3">
+      <div className="card-header">
+        <span className="text-light">Reactions</span>
+      </div>
+      <div className="card-body">
+        {reactions &&
+          reactions.map((reaction) => (
+            <p className="pill mb-3" key={reaction._id}>
+              {reaction.reactionBody}{" "}
+              <Link
+                to={`/profile/${reaction.username}`}
+                style={{ fontWeight: 700 }}
+              >
+                {reaction.username} on {reaction.createdAt}
+              </Link>
+            </p>
+          ))}
+      </div>
+    </div>
   );
-}
+};
 
-export default App;
+export default ReactionList;
